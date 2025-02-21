@@ -14,7 +14,7 @@ chunk_stride = int(sample_rate * chunk_duration)  # Convert duration to number o
 
 cache = {}
 # Choose the device explicitly, either 0 or 1, based on your needs
-device_id = 'pulse'
+# device_id = 'pulse'
 
 def callback(indata, frames, time, status):
     if status:
@@ -24,6 +24,6 @@ def callback(indata, frames, time, status):
     res = model.generate(input=speech_chunk, cache=cache, is_final=is_final, chunk_size=chunk_size, encoder_chunk_look_back=encoder_chunk_look_back, decoder_chunk_look_back=decoder_chunk_look_back)
     print(res)
 
-with sd.InputStream(samplerate=sample_rate, channels=1, device = device_id, dtype='float32', callback=callback, blocksize=chunk_stride):
+with sd.InputStream(samplerate=sample_rate, channels=1, dtype='float32', callback=callback, blocksize=chunk_stride):
     print("Starting real-time speech recognition. Press Ctrl+C to stop.")
     sd.sleep(-1)  # Wait indefinitely until the user stops the execution
