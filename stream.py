@@ -69,7 +69,7 @@ def callback(indata, frames, time, status):
     # print("Recognition result: ", res)
     print(res[0]['text'])
     print("run \"screen -S outputSession\" to stream the result on terminal")
-    subprocess.run(['screen', '-S', 'outputSession', '-X', 'stuff', res[0]['text']])
+    subprocess.run(['screen', '-S', 'outputSession', '-X', 'stuff', res[0]['text'] + ' '])
 
 
 try:
