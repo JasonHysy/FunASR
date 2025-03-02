@@ -44,7 +44,9 @@ t2t_model = TextToTextModelPipeline(encoder="text_sonar_basic_encoder",
                                     tokenizer="text_sonar_basic_encoder")  # tokenizer is attached to both encoder and decoder cards
 
 print("Text-to-Text model pipeline initialized successfully.")
-print("Starting the real-time speech recognition...")
+
+
+print("Initializeing the real-time speech recognition...")
 
 chunk_size = [0, 10, 5]  # Configure as needed, e.g., [0, 10, 5] for 600ms, [0, 8, 4] for 480ms
 encoder_chunk_look_back = 4  # Number of chunks to look back for encoder self-attention
