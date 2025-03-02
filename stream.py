@@ -3,7 +3,6 @@ import sounddevice as sd
 import numpy as np
 import subprocess
 
-
 def list_devices():
     # List all available audio devices and their IDs
     print("Available audio devices:")
@@ -37,7 +36,15 @@ def choose_device():
 device_id = choose_device()
 print(f"Device ID {device_id} selected for use.")
 
+# Initialize the Text-to-Text model pipeline\
+from sonar.inference_pipelines.text import TextToTextModelPipeline
+print("Initializing the Text-to-Text model pipeline...")
+t2t_model = TextToTextModelPipeline(encoder="text_sonar_basic_encoder",
+                                    decoder="text_sonar_basic_decoder",
+                                    tokenizer="text_sonar_basic_encoder")  # tokenizer is attached to both encoder and decoder cards
 
+print("Text-to-Text model pipeline initialized successfully.")
+print("Starting the real-time speech recognition...")
 
 chunk_size = [0, 10, 5]  # Configure as needed, e.g., [0, 10, 5] for 600ms, [0, 8, 4] for 480ms
 encoder_chunk_look_back = 4  # Number of chunks to look back for encoder self-attention
@@ -70,6 +77,11 @@ def callback(indata, frames, time, status):
     print(res[0]['text'])
     print("run \"screen -S outputSession\" to stream the result on terminal")
     subprocess.run(['screen', '-S', 'outputSession', '-X', 'stuff', res[0]['text'] + ' '])
+    if(not res[0]['text'].isspace() and res[0]['text'] !=""):
+
+        trans_text = t2t_model.predict([res[0]['text']],source_lang="eng_Latn", target_lang="arb_Arab")
+
+        subprocess.run(['screen', '-S', 'translate', '-X', 'stuff',  trans_text[0] + ' '])
 
 
 try:
@@ -81,4 +93,5 @@ try:
 except KeyboardInterrupt:
     print("Stopping...")
 except Exception as e:
+    skip = True
     print("An error occurred:", e)
